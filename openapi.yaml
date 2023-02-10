@@ -1,0 +1,106 @@
+openapi: 3.0.0
+info:
+  description: Graph Service
+  title: Graph OpenAPI
+  version: 0.0.1
+servers:
+- description: Local Dev Server
+  url: http://localhost:8080/
+paths:
+  /future_values:
+    get:
+      parameters:
+      - explode: true
+        in: query
+        name: step_length
+        required: true
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_future_values_get_200_response'
+          description: Success
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageDto'
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageDto'
+          description: The specified resource was not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageDto'
+          description: Invalid Inputs
+      tags:
+      - Graph
+components:
+  parameters:
+    patientIdParam:
+      explode: true
+      in: query
+      name: patientId
+      required: true
+      schema:
+        type: string
+      style: form
+    idParam:
+      explode: true
+      in: query
+      name: step_length
+      required: true
+      schema:
+        type: integer
+      style: form
+  responses:
+    ResourceNotFoundError:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MessageDto'
+      description: The specified resource was not found
+    UnauthorizedError:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MessageDto'
+      description: Unauthorized
+    UnAcceptableInputs:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MessageDto'
+      description: Invalid Inputs
+  schemas:
+    MessageDto:
+      properties:
+        message:
+          title: message
+          type: string
+      required:
+      - message
+      title: MessageDto
+      type: object
+    _future_values_get_200_response:
+      example:
+        message: message
+      properties:
+        message:
+          title: message
+          type: string
+      title: _future_values_get_200_response
+      type: object
+  securitySchemes:
+    bearerAuth:
+      scheme: bearer
+      type: http
